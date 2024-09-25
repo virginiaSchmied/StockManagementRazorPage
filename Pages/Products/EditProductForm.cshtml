@@ -1,0 +1,40 @@
+﻿@page "/Products/EditProduct/id={id}"
+@model EditProductModel
+@{
+    Layout = "_Layout-Log";
+}
+
+<div class="CreateForm mx-auto my-4">
+    <form asp-action="EditProduct" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Price">Price</label>
+                    <input type="number" id="Price" name="Price" class="form-control" value="@Model.product.Price"/>
+                </div>
+
+                <!-- Categories -->
+                <div class="form-group">
+                    <label for="IdProductCategory_Id">Product Category</label>
+                    <select id="IdProductCategory_Id" name="IdProductCategory_Id" class="form-control">
+                        <option value="@Model.productCategory.Id">@Model.productCategory.ProductName</option>
+                        @foreach (var category in Model.ProductsCategories)
+                        {
+                            @if (category.ProductName != @Model.productCategory.ProductName)
+                            {
+                                <option value="@category.Id">@category.ProductName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="EditButton">
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='@Url.Page("/Products")'">
+                Back
+            </button>
+            <button asp-page-handler="EditProduct" class="btn btn-primary" type="submit">Edit product</button>
+        </div>
+    </form>
+</div>

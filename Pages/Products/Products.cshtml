@@ -1,0 +1,136 @@
+﻿@page "/Products"
+@model ProductsModel
+@{
+    ViewData["Title"] = "Products";
+    Layout = "_Layout-Log";
+}
+
+<head>
+    <title>@ViewData["Title"]</title>
+</head>
+
+<body>
+
+    <div>
+        <h1>Stock Management</h1>
+    </div>
+    
+   
+    <div class="productList">
+
+
+        @if (Model.Products != null && Model.Products.Any())
+        {
+            <h3>Create a new product list</h3>
+
+            <form method="post" class="d-flex">
+                <input type="number" id="amount" name="amount" class="form-control" />
+                <button asp-page-handler="CreateProductList" class="btn btn-primary" type="submit">Create</button>
+                <button class="btn btn-secondary" type="button" onclick="location.href='/Products';">  X  </button>
+
+            </form> 
+
+            @if (Model.ProductListByAmount.Count() > 0)
+            {
+                <table class="table" style="text-align: center">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Upload Date</th>
+                            <th>Category</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var product in Model.ProductListByAmount)
+                        {
+                            <tr>
+                                <td>@product.Id</td>
+                                <td>$@product.Price</td>
+                                <td>@product.UploadDate</td>
+                                <td>@product.IdProductCategory_Id</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-secondary" role="alert">
+                    No list of products found yet
+                </div>
+            }
+
+
+            <h3>All Products</h3>
+
+            @if (Model.RoleId.Equals("Admin"))
+            {
+                <form method="get" action="/Products/NewProduct">
+                    <button class="btn btn-success" type="submit">New product</button>
+                </form>
+            }
+
+            <div id="table-container">
+                <table class="table" style="text-align: center">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Upload Date</th>
+                            <th>Category</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+ 
+                        @foreach (var product in Model.Products)
+                        {
+                            <tr>
+                                <td>@product.Id</td>
+                                <td>$@product.Price</td>
+                                <td>@product.UploadDate</td>
+                                <td>@product.IdProductCategory_Id</td>
+                                    @if (Model.RoleId.Equals("Admin"))
+                                    {
+                                        <td>
+                                            <form method="get" action="/Products/EditProduct/id=@product.Id">
+                                                <button class="btn btn-warning" type="submit">Edit</button>
+                                            </form>
+
+                                        </td>
+                                        <td>
+                                            <form asp-page-handler="Delete" asp-route-id="@product.Id" method="post">
+                                                <button class="btn btn-danger" type="submit">Delete</button>
+                                            </form>
+                                        </td>
+                                    }        
+                            </tr>
+                        } 
+                    </tbody>
+                </table>
+            </div>
+
+            <nav>
+                <ul class="pagination">
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li id="item-page" class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a class="page-link" href="?pageNumber=@i&pageSize=@Model.PageSize">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+        else
+        {
+            <div class="alert alert-info" role="alert">
+                No products found.
+            </div>
+        }
+    </div>
+</body>

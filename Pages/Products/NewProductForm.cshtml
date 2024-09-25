@@ -1,0 +1,37 @@
+﻿@page "/Products/NewProduct"
+@model StockManagementRazorPage.Pages.NewProductModel
+@{
+    Layout = "_Layout-Log";
+}
+
+<div class="CreateForm mx-auto my-4">
+    <form asp-action="Add" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Price">Price</label>
+                    <input type="number" id="Price" name="Price" class="form-control" />
+                </div>
+
+                <!-- Categories -->
+                <div class="form-group">
+                    <label for="IdProductCategory_Id">Product Category</label>
+                    <select id="IdProductCategory_Id" name="IdProductCategory_Id" class="form-control">
+                        <option value="">-- Select a category --</option>
+                        @foreach (var category in Model.ProductsCategories)
+                        {
+                            <option value="@category.Id">@category.ProductName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="CreateButton">
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='@Url.Page("/Products")'">
+                Back
+            </button>
+            <button asp-page-handler="CreateProduct" class="btn btn-success"type="submit">Create new product</button>
+        </div>
+    </form>
+</div>
